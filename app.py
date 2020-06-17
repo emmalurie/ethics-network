@@ -12,11 +12,12 @@ import dash_core_components as dcc
 import dash_html_components as html
 from data import createGraph
 import pandas as pd
-g_df = pd.read_excel("google_links.xlsx")
-m_df = pd.read_excel("microsoft_links.xlsx")
-
-g_fig = createGraph(g_df, "Google")
-m_fig = createGraph(m_df, "Microsoft")
+df = pd.read_excel("link_data.xlsx")
+df.dropna(subset=['destination'], inplace =True)
+g_fig = createGraph(df, "Google")
+m_fig = createGraph(df, "Microsoft")
+s_fig = createGraph(df, "Salesforce")
+a_fig = createGraph(df, "Amazon")
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -35,7 +36,18 @@ app.layout = html.Div([
             dcc.Graph(
                 figure=m_fig
             )
+        ]), 
+        dcc.Tab(label='Salesforce', children=[
+            dcc.Graph(
+                figure=s_fig
+            )
+        ]), 
+        dcc.Tab(label='Amazon', children=[
+            dcc.Graph(
+                figure=a_fig
+            )
         ])
+            
     ])
 ])
 

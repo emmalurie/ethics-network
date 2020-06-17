@@ -8,8 +8,10 @@ import networkx as nx
 import plotly.graph_objects as go
 
 
-def createGraph(df, title): 
+def createGraph(df, company): 
     traceRecode = []
+    
+    df = df[df['company'] == company]
 
     G = nx.from_pandas_edgelist(df, 'source', 'destination')
 
@@ -38,8 +40,11 @@ def createGraph(df, title):
             if node in df.source.values: 
                 color_map.append('green')
                 size.append(25)
-            elif df.loc[df.destination == node, 'link_type'].iloc[0] == 'internal':
+            elif df.loc[df.destination == node, 'type'].iloc[0] == 'internal':
                 color_map.append('seagreen')
+                size.append(15)
+            elif df.loc[df.destination == node, 'type'].iloc[0] == 'affiliated':
+                color_map.append('darkcyan')
                 size.append(15)
             else: 
                 color_map.append('blue')
@@ -67,7 +72,7 @@ def createGraph(df, title):
     ### create figure dictionary 
     figure = {
     "data": traceRecode,
-    "layout": go.Layout(title=title, showlegend=False, hovermode='closest',
+    "layout": go.Layout(title=company, showlegend=False, hovermode='closest',
                         margin={'b': 40, 'l': 40, 'r': 40, 't': 40},
                         xaxis={'showgrid': False, 'zeroline': False, 'showticklabels': False},
                         yaxis={'showgrid': False, 'zeroline': False, 'showticklabels': False},
